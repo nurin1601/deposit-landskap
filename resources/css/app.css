@@ -1,0 +1,51 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ── SweetAlert2 custom theme ─────────────────────────────────────────────── */
+.swal-popup-rounded {
+    border-radius: 18px !important;
+    font-family: 'Inter', ui-sans-serif, system-ui, sans-serif !important;
+    padding: 2rem 2rem 1.75rem !important;
+}
+
+.swal2-icon.swal2-warning {
+    border-color: #fbbf24 !important;
+    color: #d97706 !important;
+}
+
+.swal2-title {
+    font-size: 1.2rem !important;
+    font-weight: 700 !important;
+    color: #111827 !important;
+}
+
+.swal2-html-container {
+    font-size: 0.875rem !important;
+    color: #6b7280 !important;
+}
+
+.swal2-actions {
+    gap: 10px !important;
+    margin-top: 1.5rem !important;
+}
+
+.swal2-confirm,
+.swal2-cancel {
+    border-radius: 9999px !important;
+    font-weight: 600 !important;
+    font-size: 0.875rem !important;
+    padding: 9px 24px !important;
+    transition: filter 0.15s ease, box-shadow 0.15s ease !important;
+    box-shadow: none !important;
+}
+
+.swal2-confirm:hover {
+    filter: brightness(1.1) !important;
+    box-shadow: 0 4px 12px rgba(220, 38, 38, 0.35) !important;
+}
+
+.swal2-cancel:hover {
+    filter: brightness(1.1) !important;
+    box-shadow: 0 4px 12px rgba(22, 101, 52, 0.3) !important;
+}
