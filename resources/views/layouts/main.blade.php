@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Deposit Penyelenggaraan Landskap | MDHT</title>
-    <link rel="icon" href="{{ asset('images/logo-mdht.png') }}">
+    <link rel="icon" href="{{ asset('images/logo-MDHT.png') }}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
@@ -124,7 +124,7 @@
     <nav class="bg-gradient-to-r from-green-950 to-green-800 shadow-lg sticky top-0 z-50">
         <div class="max-w-5xl mx-auto px-4 py-3 flex justify-between items-center gap-4">
             <a href="{{ route('calculations.index') }}" class="flex items-center gap-3 group">
-                <img src="{{ asset('images/logo-mdht.png') }}" alt="Logo MDHT"
+                <img src="{{ asset('images/logo-MDHT.png') }}" alt="Logo MDHT"
                      class="h-12 w-auto drop-shadow-md transition-transform duration-300 group-hover:scale-105">
                 <div>
                     <div class="font-bold text-white text-sm sm:text-base leading-tight tracking-wide">
