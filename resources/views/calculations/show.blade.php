@@ -126,7 +126,7 @@
             <td class="right">{{ $rm($calculation->total_c) }}</td>
         </tr>
 
-        <tr class="bold" style="background: #f0fdf4;">
+        <tr class="bold">
             <td colspan="3">
                 JUMLAH KESELURUHAN (A+B+C)<br>
                 <span style="font-weight:400; font-size: 12px;">(Jumlah deposit yang perlu dibayar oleh pemaju)</span>
