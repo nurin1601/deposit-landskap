@@ -7,24 +7,27 @@ window.Swal = Swal;
 
 Alpine.start();
 
-// ── Global delete-confirmation handler ──────────────────────────────────────
+// ── Global confirm handler (delete & duplicate) ──────────────────────────────
 document.addEventListener('submit', function (e) {
     const form = e.target;
     if (!form.hasAttribute('data-confirm-delete')) return;
 
     e.preventDefault();
 
-    const title   = form.dataset.title   || 'Padam rekod ini?';
-    const message = form.dataset.message || 'Tindakan ini tidak boleh dibatalkan.';
+    const title        = form.dataset.title        || 'Teruskan?';
+    const message      = form.dataset.message      || 'Tindakan ini tidak boleh dibatalkan.';
+    const icon         = form.dataset.icon         || 'warning';
+    const confirmText  = form.dataset.confirmText  || 'Ya, padam';
+    const confirmColor = form.dataset.confirmColor || '#dc2626';
 
     Swal.fire({
         title,
         text: message,
-        icon: 'warning',
+        icon,
         showCancelButton: true,
-        confirmButtonText: 'Ya, padam',
+        confirmButtonText: confirmText,
         cancelButtonText: 'Batal',
-        confirmButtonColor: '#dc2626',
+        confirmButtonColor: confirmColor,
         cancelButtonColor:  '#166534',
         reverseButtons: true,
         focusCancel: true,

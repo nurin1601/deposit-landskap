@@ -74,9 +74,10 @@
                         {{ $c->created_at->format('d/m/Y') }}
                     </td>
                     <td class="px-5 py-3.5">
-                        <div class="flex justify-end gap-2">
+                        <div class="flex justify-end gap-1.5 flex-wrap">
+                            {{-- View --}}
                             <a href="{{ route('calculations.show', $c) }}"
-                               class="btn btn-outline btn-sm">
+                               class="btn btn-outline btn-sm" title="Lihat / Cetak">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24"
                                      fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                     <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
@@ -84,6 +85,41 @@
                                 </svg>
                                 Lihat
                             </a>
+
+                            {{-- Edit --}}
+                            <a href="{{ route('calculations.edit', $c) }}"
+                               class="btn btn-sm"
+                               style="background:#eff6ff; color:#1d4ed8; border:1.5px solid #bfdbfe;"
+                               title="Edit">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24"
+                                     fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                                </svg>
+                                Edit
+                            </a>
+
+                            {{-- Duplicate --}}
+                            <form method="POST" action="{{ route('calculations.duplicate', $c) }}"
+                                  data-confirm-delete
+                                  data-title="Salin pengiraan ini?"
+                                  data-message="Satu salinan baru bagi '{{ $c->development_type }}' akan dibuat."
+                                  data-icon="question"
+                                  data-confirm-text="Ya, salin"
+                                  data-confirm-color="#166534">
+                                @csrf
+                                <button type="submit" class="btn btn-sm"
+                                        style="background:#f0fdf4; color:#166534; border:1.5px solid #bbf7d0;">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24"
+                                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                                    </svg>
+                                    Salin
+                                </button>
+                            </form>
+
+                            {{-- Delete --}}
                             <form method="POST" action="{{ route('calculations.destroy', $c) }}"
                                   data-confirm-delete
                                   data-title="Padam pengiraan ini?"

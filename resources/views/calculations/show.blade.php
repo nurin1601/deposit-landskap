@@ -41,6 +41,18 @@
         <span class="text-xs text-gray-400 hidden sm:block">
             Pengiraan: <strong class="text-gray-600">{{ $calculation->created_at->format('d/m/Y') }}</strong>
         </span>
+
+        <a href="{{ route('calculations.edit', $calculation) }}"
+           class="btn btn-sm"
+           style="background:#eff6ff; color:#1d4ed8; border:1.5px solid #bfdbfe;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24"
+                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+            </svg>
+            Edit
+        </a>
+
         <button onclick="window.print()" class="btn btn-primary">
             <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="none" stroke="currentColor"
                  stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
