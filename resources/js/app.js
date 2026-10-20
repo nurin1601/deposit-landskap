@@ -14,11 +14,11 @@ document.addEventListener('submit', function (e) {
 
     e.preventDefault();
 
-    const title        = form.dataset.title        || 'Teruskan?';
-    const message      = form.dataset.message      || 'Tindakan ini tidak boleh dibatalkan.';
-    const icon         = form.dataset.icon         || 'warning';
-    const confirmText  = form.dataset.confirmText  || 'Ya, padam';
-    const confirmColor = form.dataset.confirmColor || '#dc2626';
+    const title        = form.getAttribute('data-title')         || 'Teruskan?';
+    const message      = form.getAttribute('data-message')       || 'Tindakan ini tidak boleh dibatalkan.';
+    const icon         = form.getAttribute('data-icon')          || 'warning';
+    const confirmText  = form.getAttribute('data-confirm-text')  || 'Ya, padam';
+    const confirmColor = form.getAttribute('data-confirm-color') || '#dc2626';
 
     Swal.fire({
         title,
