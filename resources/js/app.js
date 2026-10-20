@@ -28,12 +28,12 @@ document.addEventListener('submit', function (e) {
         confirmButtonText: confirmText,
         cancelButtonText: 'Batal',
         confirmButtonColor: confirmColor,
-        cancelButtonColor:  '#166534',
+        cancelButtonColor:  '#6b7280',
         reverseButtons: true,
         focusCancel: true,
         customClass: {
             popup:         'swal-popup-rounded',
-            confirmButton: 'swal-btn-danger',
+            confirmButton: confirmColor === '#dc2626' ? 'swal-btn-danger' : 'swal-btn-confirm',
             cancelButton:  'swal-btn-cancel',
         },
     }).then((result) => {
