@@ -13,7 +13,7 @@
 <style>
     .doc table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
     .doc td { border: 1px solid #333; padding: 7px 10px; vertical-align: top; }
-    .doc .gray td { background: #d5e8d4; }
+    .doc .gray td { background: #d9d9d9; }
     .doc .bold td { font-weight: 700; }
     .doc .center td { text-align: center; }
     .doc .right { text-align: right; }
