@@ -223,7 +223,8 @@ function calcForm(green, soft, hard, prefill) {
 
     {{-- ── Grand Total + Actions ───────────────────────────────── --}}
     <div class="card border-t-4 border-green-700 bg-gradient-to-r from-green-900 to-green-700 text-white"
-         style="padding: 20px 24px;">
+            style="background: linear-gradient(to right, #14532d, #15803d);"
+            style="padding: 20px 24px;">
         <div class="flex items-center justify-between">
             <div>
                 <div class="text-green-200 text-xs font-semibold uppercase tracking-wider mb-0.5">Jumlah Keseluruhan (A+B+C)</div>
