@@ -62,7 +62,7 @@
                 <tr class="hover:bg-green-50/60 transition-colors duration-150 group">
                     <td class="px-5 py-3.5">
                         <span class="font-medium text-gray-800 group-hover:text-green-800 transition-colors">
-                            {{ $c->development_type }}
+                            {{ \Illuminate\Support\Str::limit($c->development_type, 90) }}
                         </span>
                     </td>
                     <td class="px-5 py-3.5 text-right">

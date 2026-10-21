@@ -147,7 +147,7 @@ class CalculationController extends Controller
     private function validateCalculation(Request $request): array
     {
         return $request->validate([
-            'development_type'    => 'nullable|string|max:255',
+            'development_type'    => 'nullable|string|max:2000',
             'green_area_rate_id'  => 'required|exists:green_area_rates,id',
             'soft'                => 'nullable|array',
             'soft.*.rate_id'      => 'required|exists:soft_rates,id',

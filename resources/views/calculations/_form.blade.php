@@ -57,7 +57,7 @@ function calcForm(green, soft, hard, prefill) {
             if (u === 'pokok') return 'Bilangan pokok';
             return 'Kuantiti';
         },
-        isOther(id) { return !!this.hard[id] && this.hard[id].unit === 'l/s'; },
+        isOther(id){ return !!this.hard[id] && this.hard[id].unit === 'l/s'; },
         addSoft() { this.softRows.push({ key: Math.random(), rate_id: '', detail: '', note: '', qty: '' }); },
         isCluster(id) { return !!this.soft[id] && this.soft[id].name === 'Renek Kelompok'; },
         addHard()   { this.hardRows.push({ key: Math.random(), item_id: '', qty: '', detail: '' }); },
@@ -89,10 +89,9 @@ function calcForm(green, soft, hard, prefill) {
             <label class="block text-xs font-semibold text-gray-600 uppercase tracking-wide mb-1.5">
                 Jenis Pembangunan
             </label>
-            <input type="text" name="development_type"
-                   value="{{ old('development_type', $old['development_type'] ?? '') }}"
-                   required placeholder="cth: Projek Perumahan 70 Unit Rumah"
-                   class="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm bg-gray-50 focus:bg-white">
+            <textarea name="development_type" rows="5"
+                    placeholder="cth: Membina dan menyiapkan pusat komersial dan perkhidmatan yang mengandungi ..."
+                    class="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm bg-gray-50 focus:bg-white resize-y">{{ old('development_type', $calculation?->development_type) }}</textarea>
         </div>
     </div>
 
@@ -174,6 +173,7 @@ function calcForm(green, soft, hard, prefill) {
         <p x-show="softRows.length === 0"
            class="text-sm text-gray-400 text-center py-4 bg-gray-50 rounded-lg border border-dashed border-gray-200">
             Tiada item. Klik <strong>+ Tambah</strong> jika ada.
+            <button type="button" @click="addSoft()" x-show="softRows.length > 0" class="btn btn-primary btn-sm">+ Tambah</button>
         </p>
         <div class="flex items-center justify-between bg-green-50 rounded-lg px-4 py-2.5 border border-green-100">
             <span class="text-sm text-green-800 font-medium">Jumlah B</span>
@@ -220,6 +220,7 @@ function calcForm(green, soft, hard, prefill) {
         <p x-show="hardRows.length === 0"
            class="text-sm text-gray-400 text-center py-4 bg-gray-50 rounded-lg border border-dashed border-gray-200">
             Tiada item. Klik <strong>+ Tambah</strong> jika ada.
+            <button type="button" @click="addHard()" x-show="hardRows.length > 0" class="btn btn-primary btn-sm">+ Tambah</button>
         </p>
         <div class="flex items-center justify-between bg-green-50 rounded-lg px-4 py-2.5 border border-green-100">
             <span class="text-sm text-green-800 font-medium">Jumlah C</span>
