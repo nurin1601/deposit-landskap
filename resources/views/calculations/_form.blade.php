@@ -91,7 +91,7 @@ function calcForm(green, soft, hard, prefill) {
             </label>
             <textarea name="development_type" rows="5"
                     placeholder="cth: Membina dan menyiapkan pusat komersial dan perkhidmatan yang mengandungi ..."
-                    class="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm bg-gray-50 focus:bg-white resize-y">{{ old('development_type', $calculation?->development_type) }}</textarea>
+                    class="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm bg-gray-50 focus:bg-white resize-y">{{ old('development_type', $calculation->development_type ?? '') }}</textarea>
         </div>
     </div>
 
@@ -136,16 +136,7 @@ function calcForm(green, soft, hard, prefill) {
 
     {{-- ── B: Landskap Lembut ──────────────────────────────────── --}}
     <div class="card space-y-4">
-        <div class="flex justify-between items-center">
-            <h2 class="card-title">B) Landskap Lembut</h2>
-            <button type="button" @click="addSoft()" class="btn btn-primary btn-sm">
-                <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24"
-                     fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                    <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
-                </svg>
-                Tambah
-            </button>
-        </div>
+        <h2 class="card-title">B) Landskap Lembut</h2>
         <template x-for="(row, i) in softRows" :key="row.key">
             <div class="grid grid-cols-12 gap-2 items-center bg-gray-50 rounded-xl p-3 border border-gray-100">
                 <select :name="`soft[${i}][rate_id]`" x-model="row.rate_id" required
@@ -173,8 +164,10 @@ function calcForm(green, soft, hard, prefill) {
         <p x-show="softRows.length === 0"
            class="text-sm text-gray-400 text-center py-4 bg-gray-50 rounded-lg border border-dashed border-gray-200">
             Tiada item. Klik <strong>+ Tambah</strong> jika ada.
-            <button type="button" @click="addSoft()" x-show="softRows.length > 0" class="btn btn-primary btn-sm">+ Tambah</button>
         </p>
+        <div class="flex justify-end">
+            <button type="button" @click="addSoft()" class="btn btn-primary btn-sm">+ Tambah</button>
+        </div>
         <div class="flex items-center justify-between bg-green-50 rounded-lg px-4 py-2.5 border border-green-100">
             <span class="text-sm text-green-800 font-medium">Jumlah B</span>
             <span class="font-bold text-green-900 text-base">RM <span x-text="fmt(totalB)">0.00</span></span>
@@ -183,16 +176,7 @@ function calcForm(green, soft, hard, prefill) {
 
     {{-- ── C: Landskap Kejur ───────────────────────────────────── --}}
     <div class="card space-y-4">
-        <div class="flex justify-between items-center">
-            <h2 class="card-title">C) Landskap Kejur</h2>
-            <button type="button" @click="addHard()" class="btn btn-primary btn-sm">
-                <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24"
-                     fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                    <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
-                </svg>
-                Tambah
-            </button>
-        </div>
+        <h2 class="card-title">C) Landskap Kejur</h2>
         <template x-for="(row, i) in hardRows" :key="row.key">
             <div class="grid grid-cols-12 gap-2 items-start bg-gray-50 rounded-xl p-3 border border-gray-100">
                 <select :name="`hard[${i}][item_id]`" x-model="row.item_id" required
@@ -220,8 +204,10 @@ function calcForm(green, soft, hard, prefill) {
         <p x-show="hardRows.length === 0"
            class="text-sm text-gray-400 text-center py-4 bg-gray-50 rounded-lg border border-dashed border-gray-200">
             Tiada item. Klik <strong>+ Tambah</strong> jika ada.
-            <button type="button" @click="addHard()" x-show="hardRows.length > 0" class="btn btn-primary btn-sm">+ Tambah</button>
         </p>
+        <div class="flex justify-end">
+            <button type="button" @click="addHard()" class="btn btn-primary btn-sm">+ Tambah</button>
+        </div>
         <div class="flex items-center justify-between bg-green-50 rounded-lg px-4 py-2.5 border border-green-100">
             <span class="text-sm text-green-800 font-medium">Jumlah C</span>
             <span class="font-bold text-green-900 text-base">RM <span x-text="fmt(totalC)">0.00</span></span>
