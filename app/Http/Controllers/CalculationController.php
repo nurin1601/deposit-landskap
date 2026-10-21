@@ -75,6 +75,7 @@ class CalculationController extends Controller
             ->map(fn ($item) => [
                 'rate_id' => SoftRate::where('name', $item->name)->value('id'),
                 'detail'  => $item->detail,
+                'note'    => $item->note,
                 'qty'     => $item->qty,
             ])->values();
 
@@ -151,6 +152,7 @@ class CalculationController extends Controller
             'soft'                => 'nullable|array',
             'soft.*.rate_id'      => 'required|exists:soft_rates,id',
             'soft.*.detail'       => 'nullable|string|max:255',
+            'soft.*.note'         => 'nullable|string|max:255',
             'soft.*.qty'          => 'required|numeric|min:0.01',
             'hard'                => 'nullable|array',
             'hard.*.item_id'      => 'required|exists:hard_items,id',
@@ -170,6 +172,7 @@ class CalculationController extends Controller
                 'section'  => 'B',
                 'name'     => $rate->name,
                 'detail'   => $row['detail'] ?? null,
+                'note'     => $rate->name === 'Renek Kelompok' ? ($row['note'] ?? null) : null,
                 'qty'      => $row['qty'],
                 'rate'     => $rate->rate,
                 'unit'     => $rate->unit,

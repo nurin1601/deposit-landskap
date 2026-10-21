@@ -5,24 +5,47 @@
     $a = $calculation->greenAreaRate;
     $rm = fn ($v) => 'RM ' . number_format($v, 2);
     $n = fn ($v) => rtrim(rtrim(number_format($v, 2, '.', ''), '0'), '.');
-    $unitLabel = fn ($u) => match ($u) { 'pokok' => 'nos', 'm2' => 'm²', default => $u };
-    $softGroups = $calculation->items->where('section', 'B')->groupBy('name');
+
+    $softTitles = [
+        'Pokok Utama' => 'POKOK UTAMA',
+        'Palma' => 'POKOK PALMA',
+        'Renek Individu' => 'POKOK RENEK INDIVIDU',
+        'Renek Kelompok' => 'POKOK RENEK KELOMPOK (M2)',
+        'Penutup Bumi' => 'PENUTUP BUMI (M2)',
+        'Rumput' => 'RUMPUT (M2)',
+    ];
+    $order = array_flip(array_keys($softTitles));
+    $softGroups = $calculation->items->where('section', 'B')->groupBy('name')
+        ->sortBy(fn ($rows, $name) => $order[$name] ?? 99);
     $hardItems = $calculation->items->where('section', 'C')->values();
 @endphp
 
 <style>
-    .doc table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
-    .doc td { border: 1px solid #333; padding: 7px 10px; vertical-align: top; }
-    .doc .gray td { background: #d9d9d9; }
-    .doc .bold td { font-weight: 700; }
-    .doc .center td { text-align: center; }
-    .doc .right { text-align: right; }
+    .doc { font-family: Arial, Helvetica, sans-serif; color: #111; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .doc .logo { text-align: center; margin-bottom: 10px; }
+    .doc .logo img { height: 84px; width: auto; display: inline-block; }
+    .doc .banner { background: #77933c; color: #fff; text-align: center; font-weight: 700; font-size: 17px; padding: 8px 10px; margin-bottom: 16px; }
+    .doc .jenis { margin-bottom: 16px; font-size: 12.5px; line-height: 1.55; }
+    .doc .jenis-label { font-weight: 700; margin-bottom: 3px; }
+    .doc table { width: 100%; border-collapse: collapse; table-layout: fixed; font-size: 12.5px; margin-bottom: 14px; }
+    .doc td { border: 1px solid #222; padding: 4px 8px; vertical-align: middle; word-wrap: break-word; }
+    .doc .sec td { background: #a8c26a; font-weight: 700; }
+    .doc .colhead td { background: #e4ecd0; text-align: center; }
+    .doc .grp td { background: #f4f7ea; font-weight: 700; border-width: 2px; }
+    .doc .b td { font-weight: 700; }
+    .doc .c { text-align: center; }
+    .doc .r { text-align: right; }
+    .doc .sp { font-style: italic; }
+    .doc .grand td { background: #f6b53c; font-weight: 700; font-size: 13.5px; }
+    .doc .grand .sub { font-size: 11.5px; }
+
+    @page { size: A4; margin: 12mm; }
     @media print {
-        nav, .no-print { display: none !important; }
-        body { background: #fff; font-size: 12px; }
+        nav, header, footer, .no-print { display: none !important; }
+        body { background: #fff; }
         main { padding: 0; max-width: none; }
         .doc { padding: 0; box-shadow: none; border: none !important; }
-        .gray td { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+        .doc tr { page-break-inside: avoid; }
     }
 </style>
 
@@ -67,71 +90,110 @@
 {{-- Document --}}
 <div class="doc bg-white p-6 sm:p-8 shadow-sm border border-gray-100 rounded-xl">
 
+    <div class="logo">
+        <img src="{{ asset('images/logo-mdht.png') }}" alt="Logo MDHT">
+    </div>
+
+    <div class="banner">PENGIRAAN DEPOSIT PENYELENGGARAAN LANDSKAP</div>
+
+    <div class="jenis">
+        <div class="jenis-label">JENIS PEMBANGUNAN :</div>
+        <div>{{ mb_strtoupper($calculation->development_type) }}</div>
+    </div>
+
+    {{-- A --}}
     <table>
-        <tr class="bold center">
-            <td colspan="3">JENIS PEMBANGUNAN :<br>{{ strtoupper($calculation->development_type) }}</td>
-            <td>PENGIRAAN</td>
-        </tr>
-
-        {{-- A --}}
-        <tr class="gray bold"><td colspan="4">A) KAWASAN HIJAU – merangkumi semua skop pembersihan awam.</td></tr>
+        <colgroup><col style="width:80%"><col style="width:20%"></colgroup>
+        <tr class="sec"><td colspan="2">A) KAWASAN HIJAU – merangkumi semua skop pembersihan awam.</td></tr>
+        <tr class="colhead"><td>Kategori Pembangunan</td><td>Kadar (RM)</td></tr>
         <tr>
-            <td colspan="3">{{ $a->category }}{{ $a->tier ? ' ' . $a->tier : '' }}</td>
-            <td class="right">{{ $rm($calculation->total_a) }}</td>
+            <td class="c">{{ $a->category }}{{ $a->tier ? ' ' . $a->tier : '' }}</td>
+            <td class="r">{{ $rm($calculation->total_a) }}</td>
         </tr>
-        <tr class="bold">
-            <td colspan="3">Jumlah Keseluruhan Kawasan Hijau (A)</td>
-            <td class="right">{{ $rm($calculation->total_a) }}</td>
+        <tr class="b">
+            <td class="r">Jumlah Keseluruhan Kawasan Hijau (A)</td>
+            <td class="r">{{ $rm($calculation->total_a) }}</td>
         </tr>
+    </table>
 
-        {{-- B --}}
-        <tr class="gray bold"><td colspan="4">B) LANDSKAP LEMBUT DALAM KAWASAN PROJEK PEMBANGUNAN</td></tr>
-        @foreach ($softGroups as $name => $rows)
+    {{-- B --}}
+    <table>
+        <colgroup>
+            <col style="width:6%"><col style="width:44%"><col style="width:12%"><col style="width:18%"><col style="width:20%">
+        </colgroup>
+        <tr class="sec"><td colspan="5">B) LANDSKAP LEMBUT</td></tr>
+        <tr class="colhead">
+            <td>Bil.</td><td>Jenis pokok cadangan</td><td>Bilangan</td><td>Kadar seunit/bulan (RM)</td><td>Jumlah 12 bulan (RM)</td>
+        </tr>
+        @forelse ($softGroups as $name => $rows)
+            <tr class="grp"><td colspan="5">{{ $softTitles[$name] ?? mb_strtoupper($name) }}</td></tr>
             @foreach ($rows as $row)
                 <tr>
-                    @if ($loop->first)
-                        <td rowspan="{{ $rows->count() }}">Jenis pokok cadangan<br>({{ $name }})</td>
-                    @endif
-                    <td style="font-style: italic;">{{ $row->detail }}</td>
-                    <td>{{ $n($row->qty) }} {{ $unitLabel($row->unit) }}</td>
-                    <td class="right">RM{{ number_format($row->rate, 2) }} X {{ $n($row->qty) }} X {{ $row->months }} bulan = {{ $rm($row->subtotal) }}</td>
+                    <td class="c">{{ $loop->iteration }}</td>
+                    <td><span class="sp">{{ $row->detail ?: $row->name }}</span>{{ $row->note ? ' ' . $row->note : '' }}</td>
+                    <td class="c">{{ $n($row->qty) }}</td>
+                    <td class="r">{{ $rm($row->rate) }}</td>
+                    <td class="r">{{ $rm($row->subtotal) }}</td>
                 </tr>
             @endforeach
             <tr>
-                <td colspan="3">Jumlah keseluruhan {{ strtolower($name) }}</td>
-                <td class="right">{{ $rm($rows->sum('subtotal')) }}</td>
-            </tr>
-        @endforeach
-        <tr class="bold">
-            <td colspan="3">Jumlah Keseluruhan Landskap Lembut (B)</td>
-            <td class="right">{{ $rm($calculation->total_b) }}</td>
-        </tr>
-
-        {{-- C --}}
-        <tr class="gray bold"><td colspan="4">C) LANDSKAP KEJUR</td></tr>
-        @forelse ($hardItems as $row)
-            <tr>
-                @if ($loop->first)
-                    <td rowspan="{{ $hardItems->count() }}">Landskap kejur</td>
-                @endif
-                <td>{{ $loop->iteration }}) {{ $row->detail ? 'Lain-lain (' . $row->detail . ')' : $row->name }}</td>
-                <td>{{ $n($row->qty) }} {{ $unitLabel($row->unit) }}</td>
-                <td class="right">{{ $rm($row->rate) }} X {{ $n($row->qty) }} = {{ $rm($row->subtotal) }}</td>
+                <td colspan="4" class="r">JUMLAH :</td>
+                <td class="r">{{ $rm($rows->sum('subtotal')) }}</td>
             </tr>
         @empty
-            <tr><td colspan="4" style="text-align:center;">Tiada</td></tr>
+            <tr><td colspan="5" class="c">Tiada</td></tr>
         @endforelse
-        <tr class="bold">
-            <td colspan="3">Jumlah Keseluruhan Landskap Kejur (C)</td>
-            <td class="right">{{ $rm($calculation->total_c) }}</td>
+        <tr class="b">
+            <td colspan="4" class="r">Jumlah keseluruhan Landskap Lembut (B)</td>
+            <td class="r">{{ $rm($calculation->total_b) }}</td>
         </tr>
+    </table>
 
-        <tr class="bold">
-            <td colspan="3">
+    {{-- C --}}
+    <table>
+        <colgroup>
+            <col style="width:6%"><col style="width:44%"><col style="width:12%"><col style="width:18%"><col style="width:20%">
+        </colgroup>
+        <tr class="sec"><td colspan="5">C) LANDSKAP KEJUR</td></tr>
+        <tr class="colhead">
+            <td>Bil.</td><td>Komponen landskap kejur</td><td>Kuantiti</td><td>Kadar (RM)</td><td>Jumlah (RM)</td>
+        </tr>
+        @forelse ($hardItems as $row)
+            @php
+                $label = ($row->detail ? 'Lain-lain (' . $row->detail . ')' : $row->name)
+                    . ($row->unit === 'm2' ? ' (m²)' : '');
+            @endphp
+            <tr>
+                <td class="c">{{ $loop->iteration }}</td>
+                <td>{{ $label }}</td>
+                <td class="c">{{ $n($row->qty) }}</td>
+                <td class="r">{{ $rm($row->rate) }}</td>
+                <td class="r">{{ $rm($row->subtotal) }}</td>
+            </tr>
+        @empty
+            <tr><td colspan="5" class="c">Tiada</td></tr>
+        @endforelse
+        @if ($hardItems->count())
+            <tr>
+                <td colspan="4" class="r">JUMLAH :</td>
+                <td class="r">{{ $rm($calculation->total_c) }}</td>
+            </tr>
+        @endif
+        <tr class="b">
+            <td colspan="4" class="r">Jumlah keseluruhan Landskap Kejur (C)</td>
+            <td class="r">{{ $rm($calculation->total_c) }}</td>
+        </tr>
+    </table>
+
+    {{-- A+B+C --}}
+    <table class="grand">
+        <colgroup><col style="width:80%"><col style="width:20%"></colgroup>
+        <tr>
+            <td class="r">
                 JUMLAH KESELURUHAN (A+B+C)<br>
-                <span style="font-weight:400; font-size: 12px;">(Jumlah deposit yang perlu dibayar oleh pemaju)</span>
+                <span class="sub">(Jumlah deposit yang perlu dibayar oleh pemaju)</span>
             </td>
-            <td class="right" style="font-size: 1.05em;">{{ $rm($calculation->grand_total) }}</td>
+            <td class="r">{{ $rm($calculation->grand_total) }}</td>
         </tr>
     </table>
 </div>

@@ -58,7 +58,8 @@ function calcForm(green, soft, hard, prefill) {
             return 'Kuantiti';
         },
         isOther(id) { return !!this.hard[id] && this.hard[id].unit === 'l/s'; },
-        addSoft()   { this.softRows.push({ key: Math.random(), rate_id: '', detail: '', qty: '' }); },
+        addSoft() { this.softRows.push({ key: Math.random(), rate_id: '', detail: '', note: '', qty: '' }); },
+        isCluster(id) { return !!this.soft[id] && this.soft[id].name === 'Renek Kelompok'; },
         addHard()   { this.hardRows.push({ key: Math.random(), item_id: '', qty: '', detail: '' }); },
     };
 }
@@ -163,6 +164,11 @@ function calcForm(green, soft, hard, prefill) {
                        class="col-span-3 border border-gray-200 rounded-lg px-2 py-2 text-sm bg-white">
                 <button type="button" @click="softRows.splice(i, 1)"
                         class="btn btn-icon col-span-1 justify-self-center" title="Buang">✕</button>
+
+                <input type="text" :name="`soft[${i}][note]`" x-model="row.note"
+                        x-show="isCluster(row.rate_id)"
+                        placeholder="Maklumat tambahan, cth: (280 nos) (6nos/m2)"
+                        class="col-span-12 border border-gray-200 rounded-lg px-2 py-2 text-sm bg-white">
             </div>
         </template>
         <p x-show="softRows.length === 0"
