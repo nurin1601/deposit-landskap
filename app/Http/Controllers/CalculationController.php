@@ -19,7 +19,10 @@ class CalculationController extends Controller
         $query = Calculation::query();
 
         if ($q !== '') {
-            $query->where('development_type', 'like', "%{$q}%");
+            $query->where(function ($w) use ($q) {
+                $w->where('title', 'like', "%{$q}%")
+                ->orWhere('development_type', 'like', "%{$q}%");
+            });
         }
 
         match ($sort) {
@@ -118,7 +121,7 @@ class CalculationController extends Controller
 
         DB::transaction(function () use ($calculation) {
             $newCalc = $calculation->replicate();
-            $newCalc->development_type = $calculation->development_type . ' (Salinan)';
+            $newCalc->title = ($calculation->title ?: 'Salinan') . ' (Salinan)';
             $newCalc->created_at = now();
             $newCalc->updated_at = now();
             $newCalc->save();
@@ -147,6 +150,7 @@ class CalculationController extends Controller
     private function validateCalculation(Request $request): array
     {
         return $request->validate([
+            'title'               => 'nullable|string|max:255',
             'development_type'    => 'nullable|string|max:2000',
             'green_area_rate_id'  => 'required|exists:green_area_rates,id',
             'soft'                => 'nullable|array',
@@ -216,6 +220,7 @@ class CalculationController extends Controller
         }
 
         return [
+            'title'              => $data['title'] ?? null,
             'development_type'   => $data['development_type'],
             'green_area_rate_id' => $green->id,
             'total_a'            => $green->amount,

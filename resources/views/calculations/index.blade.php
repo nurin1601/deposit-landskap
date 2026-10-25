@@ -18,7 +18,7 @@
             <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
         </svg>
         <input type="text" name="q" value="{{ $q }}"
-               placeholder="Cari jenis pembangunan..."
+               placeholder="Cari projek pembangunan..."
                class="w-full border border-gray-200 rounded-full pl-9 pr-4 py-2 text-sm focus:border-green-500 bg-gray-50">
     </div>
     <select name="sort" onchange="this.form.submit()"
@@ -51,6 +51,7 @@
     <table class="w-full text-sm">
         <thead>
             <tr class="bg-gradient-to-r from-green-900 to-green-700 text-white text-left">
+                <th class="px-5 py-3.5 font-semibold text-xs uppercase tracking-wider">Projek</th>
                 <th class="px-5 py-3.5 font-semibold text-xs uppercase tracking-wider">Jenis Pembangunan</th>
                 <th class="px-5 py-3.5 font-semibold text-xs uppercase tracking-wider text-right">Jumlah (RM)</th>
                 <th class="px-5 py-3.5 font-semibold text-xs uppercase tracking-wider">Tarikh</th>
@@ -60,6 +61,15 @@
         <tbody class="divide-y divide-gray-100">
             @forelse ($calculations as $c)
                 <tr class="hover:bg-green-50/60 transition-colors duration-150 group">
+                    <td class="px-5 py-3.5">
+                        @if ($c->title)
+                            <span class="font-semibold text-gray-800 group-hover:text-green-800 transition-colors">
+                                {{ $c->title }}
+                            </span>
+                        @else
+                            <span class="text-gray-400">-</span>
+                        @endif
+                    </td>
                     <td class="px-5 py-3.5">
                         <span class="font-medium text-gray-800 group-hover:text-green-800 transition-colors">
                             {{ \Illuminate\Support\Str::limit($c->development_type, 90) }}
@@ -141,7 +151,7 @@
                 </tr>
             @empty
                 <tr>
-                    <td colspan="4" class="px-5 py-16 text-center">
+                    <td colspan="5" class="px-5 py-16 text-center">
                         <div class="flex flex-col items-center gap-3 text-gray-400">
                             <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24"
                                  fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">

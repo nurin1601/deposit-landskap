@@ -130,7 +130,7 @@
             @foreach ($rows as $row)
                 <tr>
                     <td class="c">{{ $loop->iteration }}</td>
-                    <td><span class="sp">{{ $row->detail ?: $row->name }}</span>{{ $row->note ? ' ' . $row->note : '' }}</td>
+                    <td class="sp">{{ $row->detail ?: $row->name }}</td>
                     <td class="c">{{ $n($row->qty) }}</td>
                     <td class="r">{{ $rm($row->rate) }}</td>
                     <td class="r">{{ $rm($row->subtotal) }}</td>

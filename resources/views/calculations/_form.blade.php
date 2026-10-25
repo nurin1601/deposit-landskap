@@ -87,6 +87,15 @@ function calcForm(green, soft, hard, prefill) {
         <h2 class="card-title">Maklumat Projek</h2>
         <div>
             <label class="block text-xs font-semibold text-gray-600 uppercase tracking-wide mb-1.5">
+                Projek
+            </label>
+            <input type="text" name="title" value="{{ old('title', $calculation->title ?? '') }}"
+                placeholder="cth: Pusat Komersial Kuala Ping"
+                class="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm bg-gray-50 focus:bg-white">
+            <p class="text-xs text-gray-400 mt-1">Nama projek ini untuk memudahkan carian sahaja dan tidak dicetak.</p>
+        </div>
+        <div>
+            <label class="block text-xs font-semibold text-gray-600 uppercase tracking-wide mb-1.5">
                 Jenis Pembangunan
             </label>
             <textarea name="development_type" rows="5"
