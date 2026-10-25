@@ -149,6 +149,7 @@
 
     {{-- ═══ MAIN CONTENT ═══ --}}
     <main class="flex-1 w-full max-w-5xl mx-auto px-4 py-8">
+        <div class='no-print'>
         @if (session('success'))
             <div class="flash-success">
                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
@@ -158,6 +159,7 @@
                 {{ session('success') }}
             </div>
         @endif
+        </div>
         @yield('content')
     </main>
 
