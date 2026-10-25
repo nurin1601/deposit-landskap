@@ -33,7 +33,7 @@ class CalculationController extends Controller
         };
 
         return view('calculations.index', [
-            'calculations' => $query->get(),
+            'calculations' => $query->paginate(12)->withQueryString(),
             'q'            => $q,
             'sort'         => $sort,
         ]);
