@@ -113,7 +113,7 @@
                             <form method="POST" action="{{ route('calculations.duplicate', $c) }}"
                                   data-confirm-delete
                                   data-title="Salin pengiraan ini?"
-                                  data-message="Satu salinan baru bagi '{{ $c->development_type }}' akan dibuat."
+                                  data-message="Satu salinan baru bagi '{{ $c->title ?: \Illuminate\Support\Str::limit($c->development_type, 60) }}' akan dibuat."
                                   data-icon="question"
                                   data-confirm-text="Ya, salin"
                                   data-confirm-color="#166534">
@@ -133,7 +133,7 @@
                             <form method="POST" action="{{ route('calculations.destroy', $c) }}"
                                   data-confirm-delete
                                   data-title="Padam pengiraan ini?"
-                                  data-message="Rekod '{{ $c->development_type }}' akan dipadam dan tidak boleh dipulihkan.">
+                                  data-message="Rekod '{{ $c->title ?: \Illuminate\Support\Str::limit($c->development_type, 60) }}' akan dipadam dan tidak boleh dipulihkan.">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="btn btn-danger btn-sm">
