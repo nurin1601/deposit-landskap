@@ -20,8 +20,8 @@
             box-shadow: 0 2px 16px rgba(5,46,22,.35);
         }
         .hp-nav-inner {
-            max-width: 1100px; margin: 0 auto;
-            padding: 0 24px;
+            max-width: 1400px; margin: 0 auto;
+            padding: 0 clamp(24px, 4vw, 64px);
             height: 64px;
             display: flex; align-items: center; justify-content: space-between; gap: 16px;
         }
@@ -59,15 +59,15 @@
         /* ─── Hero ─── */
         .hp-hero {
             background: linear-gradient(160deg, #d1fae5 0%, #ecfdf5 40%, #f0fdf4 100%);
-            padding: 72px 0 0;
+            padding: 72px 0 72px;
         }
         .hp-hero-inner {
-            max-width: 1100px; margin: 0 auto; padding: 0 24px;
+            max-width: 1400px; margin: 0 auto; padding: 0 clamp(24px, 4vw, 64px);
             display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: center;
         }
         @media (max-width: 900px) {
             .hp-hero-inner { grid-template-columns: 1fr; gap: 32px; }
-            .hp-hero { padding: 48px 0 0; }
+            .hp-hero { padding: 48px 0 48px; }
         }
         .hp-hero-eyebrow {
             display: inline-flex; align-items: center; gap: 7px;
@@ -135,7 +135,7 @@
         /* ─── Features strip ─── */
         .hp-features { background: #fff; padding: 60px 0; }
         .hp-features-inner {
-            max-width: 1100px; margin: 0 auto; padding: 0 24px;
+            max-width: 1400px; margin: 0 auto; padding: 0 clamp(24px, 4vw, 64px);
             display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px;
         }
         @media (max-width: 768px) { .hp-features-inner { grid-template-columns: 1fr; } }
@@ -154,7 +154,7 @@
 
         /* ─── Steps ─── */
         .hp-steps { background: #f9fafb; padding: 72px 0; }
-        .hp-steps-inner { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+        .hp-steps-inner { max-width: 1400px; margin: 0 auto; padding: 0 clamp(24px, 4vw, 64px); }
         .hp-section-eyebrow {
             font-size: .72rem; font-weight: 700; color: #16a34a;
             letter-spacing: .1em; text-transform: uppercase; margin-bottom: 10px;
@@ -184,7 +184,7 @@
         /* ─── Dark CTA ─── */
         .hp-cta { background: #fff; padding: 56px 24px; }
         .hp-cta-inner {
-            max-width: 1100px; margin: 0 auto; padding: 48px;
+            max-width: 1400px; margin: 0 auto; padding: 48px;
             background: #0e4a33; border-radius: 24px;
             display: grid; grid-template-columns: 1fr 1fr; gap: 56px; align-items: center;
         }
@@ -210,7 +210,7 @@
         /* ─── FAQ ─── */
         .hp-faq { background: #fff; padding: 72px 0; }
         .hp-faq-inner {
-            max-width: 1100px; margin: 0 auto; padding: 0 24px;
+            max-width: 1400px; margin: 0 auto; padding: 0 clamp(24px, 4vw, 64px);
             display: grid; grid-template-columns: 1fr 2fr; gap: 64px; align-items: start;
         }
         @media (max-width: 768px) { .hp-faq-inner { grid-template-columns: 1fr; gap: 32px; } }
@@ -239,8 +239,8 @@
         /* ─── Footer ─── */
         .hp-footer { background: linear-gradient(90deg, #052e16 0%, #14532d 100%); padding: 48px 0 0; }
         .hp-footer-inner {
-            max-width: 1100px; margin: 0 auto; padding: 0 24px 40px;
-            display: flex; justify-content: space-between; align-items: flex-start; gap: 32px; flex-wrap: wrap;
+            max-width: 1400px; margin: 0 auto; padding: 0 clamp(24px, 4vw, 64px) 40px;
+            display: flex; justify-content: flex-start; align-items: flex-start; column-gap: 120px; row-gap:32px; flex-wrap: wrap;
         }
         .hp-footer-brand { display: flex; gap: 14px; align-items: flex-start; max-width: 300px; }
         .hp-footer-brand img { height: 44px; width: auto; margin-top: 2px; }
@@ -252,10 +252,11 @@
         .hp-footer-links a:hover { color: #fff; }
         .hp-footer-bar {
             background: rgba(0,0,0,.2); border-top: 1px solid rgba(255,255,255,.08);
-            padding: 14px 24px;
+            padding: 14px 0;
         }
         .hp-footer-bar-inner {
-            max-width: 1100px; margin: 0 auto;
+            max-width: 1400px; margin: 0 auto;
+            padding: 0 clamp(24px, 4vw, 64px);
             display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;
         }
         .hp-footer-bar p { color: #6ee7b7; font-size: .75rem; }

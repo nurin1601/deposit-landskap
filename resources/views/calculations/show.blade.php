@@ -21,7 +21,7 @@
 @endphp
 
 <style>
-    .doc { font-family: Arial, Helvetica, sans-serif; color: #111; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .doc { font-family: Arial, Helvetica, sans-serif; color: #111; -webkit-print-color-adjust: exact; print-color-adjust: exact; max-width: 1000px; margin: 0 auto; }
     .doc .logo { text-align: center; margin-bottom: 10px; }
     .doc .logo img { height: 84px; width: auto; display: inline-block; }
     .doc .banner { background: #77933c; color: #fff; text-align: center; font-weight: 700; font-size: 17px; padding: 8px 10px; margin-bottom: 16px; }
@@ -43,8 +43,8 @@
     @media print {
         nav, header, footer, .no-print { display: none !important; }
         body { background: #fff; }
-        main { padding: 0; max-width: none; }
-        .doc { padding: 0; box-shadow: none; border: none !important; }
+        main.page-container { padding: 0; max-width: none; }
+        .doc { padding: 0; box-shadow: none; border: none !important; max-width: none; }
         .doc tr { page-break-inside: avoid; }
     }
 </style>

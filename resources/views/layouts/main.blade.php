@@ -37,6 +37,14 @@
             background: #16a34a; border-radius: 3px;
         }
 
+        .page-container {
+            max-width: 1300px;
+            margin-left: auto;
+            margin-right: auto;
+            padding-left: clamp(24px, 4vw, 64px);
+            padding-right: clamp(24px, 4vw, 64px);
+        }
+
         /* ── Inputs ── */
         input, select, textarea {
             font-family: inherit;
@@ -105,6 +113,18 @@
         }
         .btn-green-soft:hover { background: #166534; color: #fff; border-color: #166534; }
 
+        .btn-nav {
+            background: rgba(255,255,255,.12);
+            color: #fff;
+            border-color: rgba(255,255,255,.5);
+        }
+        .btn-nav:hover {
+            background: rgba(255,255,255,.24);
+            border-color: #fff;
+            box-shadow: 0 6px 16px rgba(0,0,0,.25);
+        }
+        @media (max-width: 639px) { .btn-nav { display: none; } }
+
         .btn-sm   { padding: 5px 14px; font-size: .8rem; }
         .btn-icon {
             width: 32px; height: 32px; padding: 0;
@@ -134,7 +154,7 @@
 
     {{-- ═══ NAVBAR ═══ --}}
     <nav class="bg-gradient-to-r from-green-950 to-green-800 shadow-lg sticky top-0 z-50">
-        <div class="max-w-5xl mx-auto px-4 py-3 flex justify-between items-center gap-4">
+        <div class="page-container py-3 flex justify-between items-center gap-4">
             <a href="{{ route('calculations.index') }}" class="flex items-center gap-3 group">
                 <img src="{{ asset('images/logo-mdht.png') }}" alt="Logo MDHT"
                      class="h-12 w-auto drop-shadow-md transition-transform duration-300 group-hover:scale-105">
@@ -148,9 +168,8 @@
                 </div>
             </a>
             <div class="flex items-center gap-3 shrink-0">
-                <a href="{{ route('home') }}"
-                   class="hidden sm:inline-flex items-center gap-1.5 text-green-300 hover:text-white text-sm font-medium transition-colors duration-150">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                <a href="{{ route('home') }}" class="btn btn-nav text-sm">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
                     Laman Utama
                 </a>
                 <a href="{{ route('calculations.create') }}"
@@ -167,7 +186,7 @@
     </nav>
 
     {{-- ═══ MAIN CONTENT ═══ --}}
-    <main class="flex-1 w-full max-w-5xl mx-auto px-4 py-8">
+    <main class="flex-1 w-full page-container py-8">
         <div class='no-print'>
         @if (session('success'))
             <div class="flash-success">
