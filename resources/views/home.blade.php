@@ -182,26 +182,30 @@
         .hp-step-card p  { font-size: .84rem; color: #6b7280; line-height: 1.6; }
 
         /* ─── Dark CTA ─── */
-        .hp-cta { background: #052e16; padding: 64px 0; }
+        .hp-cta { background: #fff; padding: 56px 24px; }
         .hp-cta-inner {
-            max-width: 1100px; margin: 0 auto; padding: 0 24px;
+            max-width: 1100px; margin: 0 auto; padding: 48px;
+            background: #0e4a33; border-radius: 24px;
             display: grid; grid-template-columns: 1fr 1fr; gap: 56px; align-items: center;
         }
-        @media (max-width: 768px) { .hp-cta-inner { grid-template-columns: 1fr; gap: 32px; } }
-        .hp-cta-eyebrow { font-size: .7rem; font-weight: 700; color: #4ade80; letter-spacing: .12em; text-transform: uppercase; margin-bottom: 14px; }
+        @media (max-width: 768px) {
+            .hp-cta { padding: 32px 16px; }
+            .hp-cta-inner { grid-template-columns: 1fr; gap: 32px; padding: 32px 24px; }
+        }
+        .hp-cta-eyebrow { font-size: .7rem; font-weight: 700; color: #d4eaa1; letter-spacing: .12em; text-transform: uppercase; margin-bottom: 14px; }
         .hp-cta h2 { font-size: clamp(1.5rem, 3vw, 2rem); font-weight: 800; color: #fff; line-height: 1.25; margin-bottom: 16px; }
-        .hp-cta-sub { font-size: .88rem; color: #86efac; line-height: 1.6; margin-bottom: 20px; }
-        .hp-cta-link { display: inline-flex; align-items: center; gap: 6px; font-size: .82rem; font-weight: 600; color: #4ade80; text-decoration: none; }
-        .hp-cta-link:hover { text-decoration: underline; }
+        .hp-cta-sub { font-size: .88rem; color: rgba(255,255,255,.72); line-height: 1.6; margin-bottom: 20px; }
+        .hp-cta-link { display: inline-flex; align-items: center; gap: 6px; font-size: .78rem; font-weight: 500; color: rgba(255,255,255,.6); text-decoration: none; }
+        .hp-cta-link:hover { color: #fff; text-decoration: underline; }
         .hp-cta-checklist { display: flex; flex-direction: column; gap: 20px; }
         .hp-cta-item { display: flex; gap: 14px; align-items: flex-start; }
         .hp-cta-check {
-            width: 24px; height: 24px; background: rgba(74,222,128,.15); border-radius: 50%;
+            width: 28px; height: 28px; background: rgba(255,255,255,.1); border-radius: 8px;
             display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px;
-            color: #4ade80;
+            color: #fff;
         }
         .hp-cta-item-text h4 { font-size: .9rem; font-weight: 700; color: #fff; margin-bottom: 3px; }
-        .hp-cta-item-text p  { font-size: .82rem; color: #6ee7b7; line-height: 1.5; }
+        .hp-cta-item-text p  { font-size: .82rem; color: rgba(255,255,255,.7); line-height: 1.5; }
 
         /* ─── FAQ ─── */
         .hp-faq { background: #fff; padding: 72px 0; }
