@@ -3,7 +3,11 @@
 use App\Http\Controllers\CalculationController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', [CalculationController::class, 'index'])->name('calculations.index');
+// Homepage
+Route::get('/', fn() => view('home'))->name('home');
+
+// Calculations
+Route::get('/calculations', [CalculationController::class, 'index'])->name('calculations.index');
 Route::get('/calculations/create', [CalculationController::class, 'create'])->name('calculations.create');
 Route::post('/calculations', [CalculationController::class, 'store'])->name('calculations.store');
 Route::get('/calculations/{calculation}/edit', [CalculationController::class, 'edit'])->name('calculations.edit');

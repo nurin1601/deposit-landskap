@@ -93,6 +93,18 @@
         }
         .btn-danger:hover { background: #dc2626; color: #fff; border-color: #dc2626; }
 
+        .btn-blue {
+            background: #eff6ff; color: #1d4ed8;
+            border-color: #bfdbfe;
+        }
+        .btn-blue:hover { background: #1d4ed8; color: #fff; border-color: #1d4ed8; }
+
+        .btn-green-soft {
+            background: #f0fdf4; color: #166534;
+            border-color: #bbf7d0;
+        }
+        .btn-green-soft:hover { background: #166534; color: #fff; border-color: #166534; }
+
         .btn-sm   { padding: 5px 14px; font-size: .8rem; }
         .btn-icon {
             width: 32px; height: 32px; padding: 0;
@@ -135,15 +147,22 @@
                     </div>
                 </div>
             </a>
-            <a href="{{ route('calculations.create') }}"
-               class="btn btn-light text-sm shrink-0">
-                <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24"
-                     fill="none" stroke="currentColor" stroke-width="2.5"
-                     stroke-linecap="round" stroke-linejoin="round">
-                    <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
-                </svg>
-                Pengiraan Baru
-            </a>
+            <div class="flex items-center gap-3 shrink-0">
+                <a href="{{ route('home') }}"
+                   class="hidden sm:inline-flex items-center gap-1.5 text-green-300 hover:text-white text-sm font-medium transition-colors duration-150">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                    Laman Utama
+                </a>
+                <a href="{{ route('calculations.create') }}"
+                   class="btn btn-light text-sm">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24"
+                         fill="none" stroke="currentColor" stroke-width="2.5"
+                         stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+                    </svg>
+                    Pengiraan Baru
+                </a>
+            </div>
         </div>
     </nav>
 

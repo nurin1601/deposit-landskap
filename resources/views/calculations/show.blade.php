@@ -66,8 +66,7 @@
         </span>
 
         <a href="{{ route('calculations.edit', $calculation) }}"
-           class="btn btn-sm"
-           style="background:#eff6ff; color:#1d4ed8; border:1.5px solid #bfdbfe;">
+           class="btn btn-blue btn-sm">
             <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24"
                  fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
