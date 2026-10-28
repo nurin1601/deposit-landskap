@@ -3,9 +3,16 @@
 @section('content')
 
 {{-- Page Header --}}
-<div class="mb-6">
-    <h1 class="text-2xl font-bold text-gray-900">Senarai Pengiraan</h1>
-    <p class="text-sm text-gray-500 mt-1">Rekod pengiraan deposit penyelenggaraan landskap</p>
+<div class="flex items-center justify-between gap-4 flex-wrap mb-6">
+    <div class="mb-6">
+        <h1 class="text-2xl font-bold text-gray-900">Senarai Pengiraan</h1>
+        <p class="text-sm text-gray-500 mt-1">Rekod pengiraan deposit penyelenggaraan landskap</p>
+    </div>
+
+    <a href="{{ route('calculations.create') }}" class="btn btn-primary">
+        <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Pengiraan Baru
+    </a>
 </div>
 
 {{-- Search & Filter --}}
