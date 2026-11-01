@@ -52,12 +52,14 @@ class CalculationController extends Controller
     {
         $data = $this->validateCalculation($request);
 
-        DB::transaction(function () use ($data) {
+        $calculation = DB::transaction(function () use ($data) {
             $calculation = Calculation::create($this->buildTotals($data));
             $calculation->items()->createMany($this->buildItems($data));
+
+            return $calculation;
         });
 
-        return redirect()->route('calculations.index')
+        return redirect()->route('calculations.show', $calculation)
             ->with('success', 'Pengiraan berjaya disimpan.');
     }
 
@@ -151,7 +153,7 @@ class CalculationController extends Controller
     {
         return $request->validate([
             'title'               => 'nullable|string|max:255',
-            'development_type'    => 'nullable|string|max:2000',
+            'development_type'    => 'required|string|max:2000',
             'green_area_rate_id'  => 'required|exists:green_area_rates,id',
             'soft'                => 'nullable|array',
             'soft.*.rate_id'      => 'required|exists:soft_rates,id',
@@ -162,6 +164,8 @@ class CalculationController extends Controller
             'hard.*.item_id'      => 'required|exists:hard_items,id',
             'hard.*.qty'          => 'required|numeric|min:0.01',
             'hard.*.detail'       => 'nullable|string|max:255',
+        ], [
+            'development_type.required' => 'Jenis pembangunan diperlukan.',
         ]);
     }
 

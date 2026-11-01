@@ -96,9 +96,9 @@ function calcForm(green, soft, hard, prefill) {
         </div>
         <div>
             <label class="block text-xs font-semibold text-gray-600 uppercase tracking-wide mb-1.5">
-                Jenis Pembangunan
+                Jenis Pembangunan <span style="color:#dc2626">*</span>
             </label>
-            <textarea name="development_type" rows="5"
+            <textarea name="development_type" rows="5" required
                     placeholder="cth: Membina dan menyiapkan pusat komersial dan perkhidmatan yang mengandungi ..."
                     class="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm bg-gray-50 focus:bg-white resize-y">{{ old('development_type', $calculation->development_type ?? '') }}</textarea>
         </div>
