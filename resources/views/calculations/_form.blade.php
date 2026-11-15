@@ -43,6 +43,14 @@ function calcForm(green, soft, hard, prefill) {
                 return sum + (item ? Number(item.rate) * Number(r.qty || 0) : 0);
             }, 0);
         },
+        rowSoftTotal(row) {
+            const item = this.soft[row.rate_id];
+            return item ? Number(item.rate) * Number(row.qty || 0) * 12 : 0;
+        },
+        rowHardTotal(row) {
+            const item = this.hard[row.item_id];
+            return item ? Number(item.rate) * Number(row.qty || 0) : 0;
+        },
         get grandTotal() {
             return this.greenAmount + this.totalB + this.totalC;
         },
@@ -109,7 +117,7 @@ function calcForm(green, soft, hard, prefill) {
         <h2 class="card-title">A) Kawasan Hijau</h2>
         <div class="grid md:grid-cols-2 gap-4">
             <div>
-                <label class="block text-xs font-semibold text-gray-600 uppercase tracking-wide mb-1.5">Kategori</label>
+                <label class="block text-xs font-semibold text-gray-600 uppercase tracking-wide mb-1.5">Kategori Pembangunan</label>
                 <select x-model="category" required
                         class="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm bg-gray-50 focus:bg-white">
                     <option value="">— Pilih kategori —</option>
@@ -157,10 +165,13 @@ function calcForm(green, soft, hard, prefill) {
                 </select>
                 <input type="text" :name="`soft[${i}][detail]`" x-model="row.detail"
                        placeholder="Nama spesies"
-                       class="col-span-4 border border-gray-200 rounded-lg px-2 py-2 text-sm bg-white">
+                       class="col-span-3 border border-gray-200 rounded-lg px-2 py-2 text-sm bg-white">
                 <input type="number" step="0.01" min="0.01" :name="`soft[${i}][qty]`" x-model="row.qty"
                        :placeholder="qtyLabel(soft, row.rate_id)" required
-                       class="col-span-3 border border-gray-200 rounded-lg px-2 py-2 text-sm bg-white">
+                       class="col-span-2 border border-gray-200 rounded-lg px-2 py-2 text-sm bg-white">
+                <div class="col-span-2 text-right text-sm font-semibold text-green-800 whitespace-nowrap">
+                    RM <span x-text="fmt(rowSoftTotal(row))">0.00</span>
+                </div>
                 <button type="button" @click="softRows.splice(i, 1)"
                         class="btn btn-icon col-span-1 justify-self-center" title="Buang">✕</button>
 
@@ -189,7 +200,7 @@ function calcForm(green, soft, hard, prefill) {
         <template x-for="(row, i) in hardRows" :key="row.key">
             <div class="grid grid-cols-12 gap-2 items-start bg-gray-50 rounded-xl p-3 border border-gray-100">
                 <select :name="`hard[${i}][item_id]`" x-model="row.item_id" required
-                        class="col-span-8 border border-gray-200 rounded-lg px-2 py-2 text-sm bg-white">
+                        class="col-span-7 border border-gray-200 rounded-lg px-2 py-2 text-sm bg-white">
                     <option value="">— Peralatan —</option>
                     @foreach ($hardItems->groupBy(fn ($h) => $h->group ?? 'Umum') as $group => $items)
                         <optgroup label="{{ $group }}">
@@ -201,7 +212,10 @@ function calcForm(green, soft, hard, prefill) {
                 </select>
                 <input type="number" step="0.01" min="0.01" :name="`hard[${i}][qty]`" x-model="row.qty"
                        :placeholder="qtyLabel(hard, row.item_id)" required
-                       class="col-span-3 border border-gray-200 rounded-lg px-2 py-2 text-sm bg-white">
+                       class="col-span-2 border border-gray-200 rounded-lg px-2 py-2 text-sm bg-white">
+                <div class="col-span-2 text-right text-sm font-semibold text-green-800 whitespace-nowrap">
+                    RM <span x-text="fmt(rowHardTotal(row))">0.00</span>
+                </div>
                 <button type="button" @click="hardRows.splice(i, 1)"
                         class="btn btn-icon col-span-1 justify-self-center mt-0.5" title="Buang">✕</button>
                 <input type="text" :name="`hard[${i}][detail]`" x-model="row.detail"
