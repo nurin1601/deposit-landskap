@@ -152,37 +152,42 @@
 </head>
 <body class="min-h-screen flex flex-col text-gray-800">
 
-    {{-- ═══ NAVBAR ═══ --}}
-    <nav class="bg-gradient-to-r from-green-950 to-green-800 shadow-lg sticky top-0 z-50">
-        <div class="page-container py-3 flex justify-between items-center gap-4">
-            <a href="{{ route('calculations.index') }}" class="flex items-center gap-3 group">
-                <img src="{{ asset('images/logo-mdht.png') }}" alt="Logo MDHT"
-                     class="h-12 w-auto drop-shadow-md transition-transform duration-300 group-hover:scale-105">
-                <div>
-                    <div class="font-bold text-white text-sm sm:text-base leading-tight tracking-wide">
-                        MAJLIS DAERAH HULU TERENGGANU
+        {{-- ═══ NAVBAR ═══ --}}
+        <nav class="bg-gradient-to-r from-green-950 to-green-800 shadow-lg sticky top-0 z-50">
+            <div class="page-container py-3 flex items-center gap-4">
+
+                {{-- Logo dan tajuk --}}
+                <a href="{{ route('calculations.index') }}" class="flex items-center gap-3 group">
+                    <img src="{{ asset('images/logo-mdht.png') }}" alt="Logo MDHT"
+                        class="h-12 w-auto drop-shadow-md transition-transform duration-300 group-hover:scale-105">
+                    <div>
+                        <div class="font-bold text-white text-sm sm:text-base leading-tight tracking-wide">
+                            MAJLIS DAERAH HULU TERENGGANU
+                        </div>
+                        <div class="text-xs sm:text-sm text-green-300 mt-0.5">
+                            Sistem Pengiraan Deposit Penyelenggaraan Landskap
+                        </div>
                     </div>
-                    <div class="text-xs sm:text-sm text-green-300 mt-0.5">
-                        Sistem Pengiraan Deposit Penyelenggaraan Landskap
-                    </div>
-                </div>
-            </a>
-            <div class="flex items-center gap-3 shrink-0">
-                <a href="{{ route('home') }}" class="btn btn-nav text-sm">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-                    Laman Utama
                 </a>
 
+                {{-- Ikon laman utama --}}
+                <a href="{{ route('home') }}" class="btn btn-nav btn-nav-icon shrink-0" style="margin-left: 6px;" title="Laman Utama" aria-label="Laman Utama">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                </a>
+
+                {{-- Nama pengguna dan log keluar (hanya selepas log masuk) --}}
                 @auth
-                    <span class="hidden sm:block text-green-200 text-sm">{{ auth()->user()->name }}</span>
-                    <form method="POST" action="{{ route('logout') }}">
-                        @csrf
-                        <button type="submit" class="btn btn-light btn-sm">Log Keluar</button>
-                    </form>
+                    <div style="margin-left:auto; display:flex; align-items:center; gap:12px;">
+                        <span class="hidden sm:block text-green-200 text-sm">{{ auth()->user()->name }}</span>
+                        <form method="POST" action="{{ route('logout') }}">
+                            @csrf
+                            <button type="submit" class="btn btn-nav btn-sm">➜] Log Keluar</button>
+                        </form>
+                    </div>
                 @endauth
+
             </div>
-        </div>
-    </nav>
+        </nav>
 
     {{-- ═══ MAIN CONTENT ═══ --}}
     <main class="flex-1 w-full page-container py-8">
