@@ -16,26 +16,26 @@ class CalculationController extends Controller
         $q = trim($request->query('q', ''));
         $sort = $request->query('sort', 'newest');
 
-        $query = Calculation::query();
+        $query = Calculation::where('user_id', auth()->id());
 
         if ($q !== '') {
             $query->where(function ($w) use ($q) {
                 $w->where('title', 'like', "%{$q}%")
-                ->orWhere('development_type', 'like', "%{$q}%");
+                    ->orWhere('development_type', 'like', "%{$q}%");
             });
         }
 
         match ($sort) {
-            'oldest'  => $query->oldest(),
+            'oldest' => $query->oldest(),
             'highest' => $query->orderByDesc('grand_total'),
-            'lowest'  => $query->orderBy('grand_total'),
-            default   => $query->latest(),
+            'lowest' => $query->orderBy('grand_total'),
+            default => $query->latest(),
         };
 
         return view('calculations.index', [
             'calculations' => $query->paginate(12)->withQueryString(),
-            'q'            => $q,
-            'sort'         => $sort,
+            'q' => $q,
+            'sort' => $sort,
         ]);
     }
 
@@ -43,8 +43,8 @@ class CalculationController extends Controller
     {
         return view('calculations.create', [
             'greenRates' => GreenAreaRate::orderBy('id')->get(),
-            'softRates'  => SoftRate::orderBy('id')->get(),
-            'hardItems'  => HardItem::orderBy('id')->get(),
+            'softRates' => SoftRate::orderBy('id')->get(),
+            'hardItems' => HardItem::orderBy('id')->get(),
         ]);
     }
 
@@ -53,7 +53,7 @@ class CalculationController extends Controller
         $data = $this->validateCalculation($request);
 
         $calculation = DB::transaction(function () use ($data) {
-            $calculation = Calculation::create($this->buildTotals($data));
+            $calculation = Calculation::create($this->buildTotals($data) + ['user_id' => auth()->id()]);
             $calculation->items()->createMany($this->buildItems($data));
 
             return $calculation;
@@ -65,6 +65,7 @@ class CalculationController extends Controller
 
     public function show(Calculation $calculation)
     {
+        $this->ownCalculation($calculation);
         $calculation->load('greenAreaRate', 'items');
 
         return view('calculations.show', compact('calculation'));
@@ -72,6 +73,7 @@ class CalculationController extends Controller
 
     public function edit(Calculation $calculation)
     {
+        $this->ownCalculation($calculation);
         $calculation->load('greenAreaRate', 'items');
 
         // Reconstruct soft rows (section B) for the form
@@ -79,9 +81,9 @@ class CalculationController extends Controller
             ->where('section', 'B')
             ->map(fn ($item) => [
                 'rate_id' => SoftRate::where('name', $item->name)->value('id'),
-                'detail'  => $item->detail,
-                'note'    => $item->note,
-                'qty'     => $item->qty,
+                'detail' => $item->detail,
+                'note' => $item->note,
+                'qty' => $item->qty,
             ])->values();
 
         // Reconstruct hard rows (section C)
@@ -89,22 +91,23 @@ class CalculationController extends Controller
             ->where('section', 'C')
             ->map(fn ($item) => [
                 'item_id' => HardItem::where('name', $item->name)->value('id'),
-                'qty'     => $item->qty,
-                'detail'  => $item->detail,
+                'qty' => $item->qty,
+                'detail' => $item->detail,
             ])->values();
 
         return view('calculations.edit', [
             'calculation' => $calculation,
-            'greenRates'  => GreenAreaRate::orderBy('id')->get(),
-            'softRates'   => SoftRate::orderBy('id')->get(),
-            'hardItems'   => HardItem::orderBy('id')->get(),
-            'softRows'    => $softRows,
-            'hardRows'    => $hardRows,
+            'greenRates' => GreenAreaRate::orderBy('id')->get(),
+            'softRates' => SoftRate::orderBy('id')->get(),
+            'hardItems' => HardItem::orderBy('id')->get(),
+            'softRows' => $softRows,
+            'hardRows' => $hardRows,
         ]);
     }
 
     public function update(Request $request, Calculation $calculation)
     {
+        $this->ownCalculation($calculation);
         $data = $this->validateCalculation($request);
 
         DB::transaction(function () use ($data, $calculation) {
@@ -119,11 +122,12 @@ class CalculationController extends Controller
 
     public function duplicate(Calculation $calculation)
     {
+        $this->ownCalculation($calculation);
         $calculation->load('items');
 
         DB::transaction(function () use ($calculation) {
             $newCalc = $calculation->replicate();
-            $newCalc->title = ($calculation->title ?: 'Salinan') . ' (Salinan)';
+            $newCalc->title = ($calculation->title ?: 'Salinan').' (Salinan)';
             $newCalc->created_at = now();
             $newCalc->updated_at = now();
             $newCalc->save();
@@ -141,6 +145,7 @@ class CalculationController extends Controller
 
     public function destroy(Calculation $calculation)
     {
+        $this->ownCalculation($calculation);
         $calculation->delete();
 
         return redirect()->route('calculations.index')
@@ -152,18 +157,18 @@ class CalculationController extends Controller
     private function validateCalculation(Request $request): array
     {
         return $request->validate([
-            'title'               => 'nullable|string|max:255',
-            'development_type'    => 'required|string|max:2000',
-            'green_area_rate_id'  => 'required|exists:green_area_rates,id',
-            'soft'                => 'nullable|array',
-            'soft.*.rate_id'      => 'required|exists:soft_rates,id',
-            'soft.*.detail'       => 'nullable|string|max:255',
-            'soft.*.note'         => 'nullable|string|max:255',
-            'soft.*.qty'          => 'required|numeric|min:0.01',
-            'hard'                => 'nullable|array',
-            'hard.*.item_id'      => 'required|exists:hard_items,id',
-            'hard.*.qty'          => 'required|numeric|min:0.01',
-            'hard.*.detail'       => 'nullable|string|max:255',
+            'title' => 'nullable|string|max:255',
+            'development_type' => 'required|string|max:2000',
+            'green_area_rate_id' => 'required|exists:green_area_rates,id',
+            'soft' => 'nullable|array',
+            'soft.*.rate_id' => 'required|exists:soft_rates,id',
+            'soft.*.detail' => 'nullable|string|max:255',
+            'soft.*.note' => 'nullable|string|max:255',
+            'soft.*.qty' => 'required|numeric|min:0.01',
+            'hard' => 'nullable|array',
+            'hard.*.item_id' => 'required|exists:hard_items,id',
+            'hard.*.qty' => 'required|numeric|min:0.01',
+            'hard.*.detail' => 'nullable|string|max:255',
         ], [
             'development_type.required' => 'Jenis pembangunan diperlukan.',
         ]);
@@ -177,14 +182,14 @@ class CalculationController extends Controller
             $rate = SoftRate::findOrFail($row['rate_id']);
             $subtotal = round($rate->rate * $row['qty'] * 12, 2);
             $items[] = [
-                'section'  => 'B',
-                'name'     => $rate->name,
-                'detail'   => $row['detail'] ?? null,
-                'note'     => $rate->name === 'Renek Kelompok' ? ($row['note'] ?? null) : null,
-                'qty'      => $row['qty'],
-                'rate'     => $rate->rate,
-                'unit'     => $rate->unit,
-                'months'   => 12,
+                'section' => 'B',
+                'name' => $rate->name,
+                'detail' => $row['detail'] ?? null,
+                'note' => $rate->name === 'Renek Kelompok' ? ($row['note'] ?? null) : null,
+                'qty' => $row['qty'],
+                'rate' => $rate->rate,
+                'unit' => $rate->unit,
+                'months' => 12,
                 'subtotal' => $subtotal,
             ];
         }
@@ -193,13 +198,13 @@ class CalculationController extends Controller
             $item = HardItem::findOrFail($row['item_id']);
             $subtotal = round($item->rate * $row['qty'], 2);
             $items[] = [
-                'section'  => 'C',
-                'name'     => $item->name,
-                'detail'   => $item->unit === 'l/s' ? ($row['detail'] ?? null) : null,
-                'qty'      => $row['qty'],
-                'rate'     => $item->rate,
-                'unit'     => $item->unit,
-                'months'   => null,
+                'section' => 'C',
+                'name' => $item->name,
+                'detail' => $item->unit === 'l/s' ? ($row['detail'] ?? null) : null,
+                'qty' => $row['qty'],
+                'rate' => $item->rate,
+                'unit' => $item->unit,
+                'months' => null,
                 'subtotal' => $subtotal,
             ];
         }
@@ -209,28 +214,33 @@ class CalculationController extends Controller
 
     private function buildTotals(array $data): array
     {
-        $green  = GreenAreaRate::findOrFail($data['green_area_rate_id']);
+        $green = GreenAreaRate::findOrFail($data['green_area_rate_id']);
         $totalB = 0;
         $totalC = 0;
 
         foreach ($data['soft'] ?? [] as $row) {
-            $rate    = SoftRate::findOrFail($row['rate_id']);
+            $rate = SoftRate::findOrFail($row['rate_id']);
             $totalB += round($rate->rate * $row['qty'] * 12, 2);
         }
 
         foreach ($data['hard'] ?? [] as $row) {
-            $item    = HardItem::findOrFail($row['item_id']);
+            $item = HardItem::findOrFail($row['item_id']);
             $totalC += round($item->rate * $row['qty'], 2);
         }
 
         return [
-            'title'              => $data['title'] ?? null,
-            'development_type'   => $data['development_type'],
+            'title' => $data['title'] ?? null,
+            'development_type' => $data['development_type'],
             'green_area_rate_id' => $green->id,
-            'total_a'            => $green->amount,
-            'total_b'            => $totalB,
-            'total_c'            => $totalC,
-            'grand_total'        => $green->amount + $totalB + $totalC,
+            'total_a' => $green->amount,
+            'total_b' => $totalB,
+            'total_c' => $totalC,
+            'grand_total' => $green->amount + $totalB + $totalC,
         ];
+    }
+
+    private function ownCalculation(Calculation $calculation): void
+    {
+        abort_unless((int) $calculation->user_id === (int) auth()->id(), 404);
     }
 }

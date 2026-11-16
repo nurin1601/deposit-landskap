@@ -132,6 +132,20 @@
         }
         .btn-icon:hover { background: #dc2626; color: #fff; }
 
+        /* Menu pengguna */
+        [x-cloak] { display: none !important; }
+        .menu-item {
+            display: flex; align-items: center; gap: 10px; width: 100%;
+            padding: 9px 12px; border-radius: 8px;
+            font-family: inherit; font-size: .875rem; font-weight: 500; text-align: left;
+            color: #14532d; text-decoration: none;
+            background: none; border: none; cursor: pointer;
+        }
+        .menu-item:hover { background: #f0fdf4; }
+        .menu-item-danger { color: #dc2626; }
+        .menu-item-danger:hover { background: #fef2f2; }
+        .menu-sep { height: 1px; background: #e5e7eb; margin: 6px 0; }
+
         /* ── Flash Message ── */
         .flash-success {
             background: linear-gradient(90deg, #dcfce7, #f0fdf4);
@@ -177,12 +191,47 @@
 
                 {{-- Nama pengguna dan log keluar (hanya selepas log masuk) --}}
                 @auth
-                    <div style="margin-left:auto; display:flex; align-items:center; gap:12px;">
-                        <span class="hidden sm:block text-green-200 text-sm">{{ auth()->user()->name }}</span>
-                        <form method="POST" action="{{ route('logout') }}">
-                            @csrf
-                            <button type="submit" class="btn btn-nav btn-sm">➜] Log Keluar</button>
-                        </form>
+                    <div style="margin-left:auto; position:relative;" x-data="{ open: false }"
+                        @click.outside="open = false" @keydown.escape.window="open = false">
+
+                        <button type="button" @click="open = !open" class="btn btn-nav btn-sm"
+                                aria-haspopup="true" :aria-expanded="open">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                            <span class="hidden sm:inline">{{ auth()->user()->name }}</span>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+                        </button>
+
+                        <div x-show="open" x-cloak x-transition.opacity.duration.150ms
+                            style="position:absolute; right:0; top:calc(100% + 10px); min-width:230px; background:#fff; border-radius:12px; border:1px solid #d1fae5; box-shadow:0 12px 32px rgba(5,46,22,.25); padding:6px; z-index:60;">
+
+                            <div style="padding:8px 12px 6px;">
+                                <div style="font-size:.8rem; font-weight:700; color:#14532d;">{{ auth()->user()->name }}</div>
+                                <div style="font-size:.72rem; color:#6b7280;">{{ auth()->user()->email }}</div>
+                            </div>
+                            <div class="menu-sep"></div>
+
+                            <a href="{{ route('account.password.edit') }}" class="menu-item">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21 2-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0 3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg>
+                                Tukar kata laluan
+                            </a>
+
+                            @can('manage-users')
+                                <a href="{{ route('users.index') }}" class="menu-item">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                                    Urus pengguna
+                                </a>
+                            @endcan
+
+                            <div class="menu-sep"></div>
+
+                            <form method="POST" action="{{ route('logout') }}">
+                                @csrf
+                                <button type="submit" class="menu-item menu-item-danger">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+                                    Log keluar
+                                </button>
+                            </form>
+                        </div>
                     </div>
                 @endauth
 
