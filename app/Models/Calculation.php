@@ -17,4 +17,9 @@ class Calculation extends Model
     {
         return $this->hasMany(CalculationItem::class);
     }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

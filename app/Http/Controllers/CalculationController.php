@@ -8,34 +8,50 @@ use App\Models\HardItem;
 use App\Models\SoftRate;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Models\User;
 
 class CalculationController extends Controller
 {
-    public function index(Request $request)
+        public function index(Request $request)
     {
+        $isAdmin = auth()->user()->is_admin;
         $q = trim($request->query('q', ''));
         $sort = $request->query('sort', 'newest');
 
-        $query = Calculation::where('user_id', auth()->id());
+        $query = Calculation::with('user'); 
+
+        if (! $isAdmin) {
+            $query->where('user_id', auth()->id());
+        } elseif ($request->query('owner') === 'none') {
+            $query->whereNull('user_id');
+        } elseif ($request->filled('owner')) {
+            $query->where('user_id', $request->query('owner'));
+        }
 
         if ($q !== '') {
-            $query->where(function ($w) use ($q) {
+            $query->where(function ($w) use ($q, $isAdmin) {
                 $w->where('title', 'like', "%{$q}%")
-                    ->orWhere('development_type', 'like', "%{$q}%");
+                ->orWhere('development_type', 'like', "%{$q}%");
+
+                if ($isAdmin) {
+                    $w->orWhereHas('user', fn ($u) => $u->where('name', 'like', "%{$q}%"));
+                }
             });
         }
 
         match ($sort) {
-            'oldest' => $query->oldest(),
+            'oldest'  => $query->oldest(),
             'highest' => $query->orderByDesc('grand_total'),
-            'lowest' => $query->orderBy('grand_total'),
-            default => $query->latest(),
+            'lowest'  => $query->orderBy('grand_total'),
+            default   => $query->latest(),
         };
 
         return view('calculations.index', [
             'calculations' => $query->paginate(12)->withQueryString(),
-            'q' => $q,
-            'sort' => $sort,
+            'q'            => $q,
+            'sort'         => $sort,
+            'isAdmin'      => $isAdmin,
+            'users'        => $isAdmin ? User::orderBy('name')->get() : collect(),
         ]);
     }
 
@@ -65,7 +81,7 @@ class CalculationController extends Controller
 
     public function show(Calculation $calculation)
     {
-        $this->ownCalculation($calculation);
+        $this->viewableCalculation($calculation);
         $calculation->load('greenAreaRate', 'items');
 
         return view('calculations.show', compact('calculation'));
@@ -241,6 +257,14 @@ class CalculationController extends Controller
 
     private function ownCalculation(Calculation $calculation): void
     {
-        abort_unless((int) $calculation->user_id === (int) auth()->id(), 404);
+        abort_unless(auth()->user()->can('edit-calculation', $calculation), 404);
+    }
+
+    private function viewableCalculation(Calculation $calculation): void
+    {
+        abort_unless(
+            auth()->user()->is_admin || (int) $calculation->user_id === (int) auth()->id(),
+            404
+        );
     }
 }

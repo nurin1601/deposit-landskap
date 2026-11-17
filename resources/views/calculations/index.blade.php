@@ -5,14 +5,18 @@
 {{-- Page Header --}}
 <div class="flex items-center justify-between gap-4 flex-wrap mb-6">
     <div class="mb-6">
-        <h1 class="text-2xl font-bold text-gray-900">Senarai Pengiraan</h1>
-        <p class="text-sm text-gray-500 mt-1">Rekod pengiraan deposit penyelenggaraan landskap</p>
+        <h1 class="text-2xl font-bold text-gray-900">{{ $isAdmin ? 'Semua Pengiraan' : 'Senarai Pengiraan' }}</h1>
+        <p class="text-sm text-gray-500 mt-1">
+            {{ $isAdmin ? 'Rekod pengiraan semua pengguna (lihat sahaja)' : 'Rekod pengiraan deposit penyelenggaraan landskap' }}
+        </p>
     </div>
 
-    <a href="{{ route('calculations.create') }}" class="btn btn-primary">
-        <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-        Pengiraan Baru
-    </a>
+    @can('create-calculations')
+        <a href="{{ route('calculations.create') }}" class="btn btn-primary">
+            <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Pengiraan Baru
+        </a>
+    @endcan
 </div>
 
 {{-- Search & Filter --}}
@@ -25,9 +29,10 @@
             <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
         </svg>
         <input type="text" name="q" value="{{ $q }}"
-               placeholder="Cari projek pembangunan..."
+               placeholder="{{ $isAdmin ? 'Cari projek, jenis atau nama pengguna...' : 'Cari projek pembangunan...' }}"
                class="w-full border border-gray-200 rounded-full pl-9 pr-4 py-2 text-sm focus:border-green-500 bg-gray-50">
     </div>
+
     <select name="sort" onchange="this.form.submit()"
             class="border border-gray-200 rounded-full px-4 py-2 text-sm bg-gray-50 cursor-pointer">
         <option value="newest" @selected($sort === 'newest')>🕐 Terbaru</option>
@@ -36,7 +41,7 @@
         <option value="lowest" @selected($sort === 'lowest')>↓ Jumlah terendah</option>
     </select>
     <button type="submit" class="btn btn-primary btn-sm">Cari</button>
-    @if ($q !== '' || $sort !== 'newest')
+    @if ($q !== '' || $sort !== 'newest' || request('owner'))
         <a href="{{ route('calculations.index') }}" class="btn btn-outline btn-sm">✕ Reset</a>
     @endif
 </form>
@@ -60,6 +65,9 @@
             <tr class="bg-gradient-to-r from-green-900 to-green-700 text-white text-left">
                 <th class="px-5 py-3.5 font-semibold text-xs uppercase tracking-wider">Projek</th>
                 <th class="px-5 py-3.5 font-semibold text-xs uppercase tracking-wider">Jenis Pembangunan</th>
+                @if ($isAdmin)
+                    <th class="px-5 py-3.5 font-semibold text-xs uppercase tracking-wider">Dicipta oleh</th>
+                @endif
                 <th class="px-5 py-3.5 font-semibold text-xs uppercase tracking-wider text-right">Jumlah (RM)</th>
                 <th class="px-5 py-3.5 font-semibold text-xs uppercase tracking-wider">Tarikh</th>
                 <th class="px-5 py-3.5 font-semibold text-xs uppercase tracking-wider text-right">Tindakan</th>
@@ -82,6 +90,11 @@
                             {{ \Illuminate\Support\Str::limit($c->development_type, 90) }}
                         </span>
                     </td>
+                    @if ($isAdmin)
+                        <td class="px-5 py-3.5 text-sm {{ $c->user ? 'text-gray-700' : 'text-gray-400' }}">
+                            {{ $c->user?->name ?? 'Akaun dipadam' }}
+                        </td>
+                    @endif
                     <td class="px-5 py-3.5 text-right">
                         <span class="font-semibold text-green-800">
                             RM {{ number_format($c->grand_total, 2) }}
@@ -103,60 +116,62 @@
                                 Lihat
                             </a>
 
-                            {{-- Edit --}}
-                            <a href="{{ route('calculations.edit', $c) }}"
-                               class="btn btn-blue btn-sm"
-                               title="Edit">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24"
-                                     fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
-                                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
-                                </svg>
-                                Edit
-                            </a>
-
-                            {{-- Duplicate --}}
-                            <form method="POST" action="{{ route('calculations.duplicate', $c) }}"
-                                  data-confirm-delete
-                                  data-title="Salin pengiraan ini?"
-                                  data-message="Satu salinan baru bagi '{{ $c->title ?: \Illuminate\Support\Str::limit($c->development_type, 60) }}' akan dibuat."
-                                  data-icon="question"
-                                  data-confirm-text="Ya, salin"
-                                  data-confirm-color="#166534">
-                                @csrf
-                                <button type="submit" class="btn btn-green-soft btn-sm">
+                            @can('edit-calculation', $c)
+                                {{-- Edit --}}
+                                <a href="{{ route('calculations.edit', $c) }}"
+                                   class="btn btn-blue btn-sm"
+                                   title="Edit">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24"
                                          fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
-                                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                                        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
                                     </svg>
-                                    Salin
-                                </button>
-                            </form>
+                                    Edit
+                                </a>
 
-                            {{-- Delete --}}
-                            <form method="POST" action="{{ route('calculations.destroy', $c) }}"
-                                  data-confirm-delete
-                                  data-title="Padam pengiraan ini?"
-                                  data-message="Rekod '{{ $c->title ?: \Illuminate\Support\Str::limit($c->development_type, 60) }}' akan dipadam dan tidak boleh dipulihkan.">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn btn-danger btn-sm">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24"
-                                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                        <polyline points="3 6 5 6 21 6"/>
-                                        <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
-                                        <path d="M10 11v6M14 11v6"/>
-                                    </svg>
-                                    Padam
-                                </button>
-                            </form>
+                                {{-- Duplicate --}}
+                                <form method="POST" action="{{ route('calculations.duplicate', $c) }}"
+                                      data-confirm-delete
+                                      data-title="Salin pengiraan ini?"
+                                      data-message="Satu salinan baru bagi '{{ $c->title ?: \Illuminate\Support\Str::limit($c->development_type, 60) }}' akan dibuat."
+                                      data-icon="question"
+                                      data-confirm-text="Ya, salin"
+                                      data-confirm-color="#166534">
+                                    @csrf
+                                    <button type="submit" class="btn btn-green-soft btn-sm">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24"
+                                             fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                                            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                                        </svg>
+                                        Salin
+                                    </button>
+                                </form>
+
+                                {{-- Delete --}}
+                                <form method="POST" action="{{ route('calculations.destroy', $c) }}"
+                                      data-confirm-delete
+                                      data-title="Padam pengiraan ini?"
+                                      data-message="Rekod '{{ $c->title ?: \Illuminate\Support\Str::limit($c->development_type, 60) }}' akan dipadam dan tidak boleh dipulihkan.">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-danger btn-sm">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24"
+                                             fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <polyline points="3 6 5 6 21 6"/>
+                                            <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
+                                            <path d="M10 11v6M14 11v6"/>
+                                        </svg>
+                                        Padam
+                                    </button>
+                                </form>
+                            @endcan
                         </div>
                     </td>
                 </tr>
             @empty
                 <tr>
-                    <td colspan="5" class="px-5 py-16 text-center">
+                    <td colspan="{{ $isAdmin ? 6 : 5 }}" class="px-5 py-16 text-center">
                         <div class="flex flex-col items-center gap-3 text-gray-400">
                             <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24"
                                  fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
@@ -170,9 +185,11 @@
                                 {{ $q !== '' ? 'Tiada hasil untuk "' . $q . '".' : 'Belum ada pengiraan.' }}
                             </p>
                             @if ($q === '')
-                                <a href="{{ route('calculations.create') }}" class="btn btn-primary btn-sm mt-1">
-                                    + Buat Pengiraan Pertama
-                                </a>
+                                @can('create-calculations')
+                                    <a href="{{ route('calculations.create') }}" class="btn btn-primary btn-sm mt-1">
+                                        + Buat Pengiraan Pertama
+                                    </a>
+                                @endcan
                             @endif
                         </div>
                     </td>
@@ -180,6 +197,10 @@
             @endforelse
         </tbody>
     </table>
+    <div class="flex flex-wrap items-center justify-between gap-3 border-t border-gray-100 px-5 py-3.5 text-xs text-gray-500">
+        <span>Memaparkan {{ $calculations->count() }} daripada {{ $calculations->total() }} rekod</span>
+        <span>Halaman {{ $calculations->currentPage() }} daripada {{ $calculations->lastPage() }}</span>
+    </div>
 </div>
 <div class="mt-4">
     {{ $calculations->links() }}

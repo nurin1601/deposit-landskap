@@ -65,6 +65,7 @@
             Pengiraan: <strong class="text-gray-600">{{ $calculation->created_at->format('d/m/Y') }}</strong>
         </span>
 
+        @can('edit-calculation', $calculation)
         <a href="{{ route('calculations.edit', $calculation) }}"
            class="btn btn-blue btn-sm">
             <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24"
@@ -74,6 +75,7 @@
             </svg>
             Edit
         </a>
+        @endcan
 
         <button onclick="window.print()" class="btn btn-primary">
             <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="none" stroke="currentColor"

@@ -308,10 +308,12 @@
                 rujuk semula rekod pengiraan dalam satu tempat.
             </p>
             <div class="hp-hero-actions">
+                @unless (auth()->user()?->is_admin)
                 <a href="{{ route('calculations.create') }}" class="hp-btn-primary">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
                     Pengiraan Baharu
                 </a>
+                @endunless
                 <a href="{{ route('calculations.index') }}" class="hp-btn-outline">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
                     Senarai Pengiraan
@@ -513,8 +515,10 @@
         <div class="hp-footer-links">
             <h4>Pautan Cepat</h4>
             <ul>
+                @unless (auth()->user()?->is_admin)
                 <li><a href="{{ route('calculations.create') }}">Pengiraan Baharu</a></li>
-                <li><a href="{{ route('calculations.index') }}">Senarai Pengiraan</a></li>
+                @endunless
+                <li><a href="{{ route('calculations.index') }}">{{ auth()->user()?->is_admin ? 'Semua Pengiraan' : 'Senarai Pengiraan' }}</a></li>
                 <li><a href="#cara-penggunaan">Cara Penggunaan</a></li>
             </ul>
         </div>

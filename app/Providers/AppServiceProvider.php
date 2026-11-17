@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Models\Calculation;
 use App\Models\User;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Gate;
@@ -24,5 +25,9 @@ class AppServiceProvider extends ServiceProvider
     {
         App::setLocale('ms');
         Gate::define('manage-users', fn (User $user) => (bool) $user->is_admin);
+        Gate::define('create-calculations', fn (User $user) => ! $user->is_admin);
+        Gate::define('edit-calculation', fn (User $user, Calculation $calculation) =>
+            ! $user->is_admin && (int) $calculation->user_id === (int) $user->id
+        );
     }
 }
