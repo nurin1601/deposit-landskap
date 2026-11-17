@@ -1,6 +1,14 @@
 @extends('layouts.main')
 
 @section('content')
+<a href="{{ route('calculations.index') }}" class="btn btn-outline btn-sm mb-4">
+    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
+         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="15 18 9 12 15 6"/>
+    </svg>
+    Kembali
+</a>
+
 <div class="flex items-center justify-between gap-4 flex-wrap mb-6">
     <div>
         <h1 class="text-2xl font-bold text-gray-800">Urus Pengguna</h1>
@@ -17,12 +25,12 @@
 
 <div class="card overflow-x-auto" style="padding:0;">
     <table class="w-full text-sm">
-        <thead class="bg-green-800 text-white text-left">
-            <tr>
-                <th class="px-5 py-3">Nama</th>
-                <th class="px-5 py-3">E-mel</th>
-                <th class="px-5 py-3">Peranan</th>
-                <th class="px-5 py-3 text-right">Tindakan</th>
+        <thead>
+            <tr class="bg-gradient-to-r from-green-900 to-green-700 text-white text-left">
+                <th class="px-5 py-3.5 font-semibold text-xs uppercase tracking-wider">Nama</th>
+                <th class="px-5 py-3.5 font-semibold text-xs uppercase tracking-wider">E-mel</th>
+                <th class="px-5 py-3.5 font-semibold text-xs uppercase tracking-wider">Peranan</th>
+                <th class="px-5 py-3.5 font-semibold text-xs uppercase tracking-wider text-right">Tindakan</th>
             </tr>
         </thead>
         <tbody>
